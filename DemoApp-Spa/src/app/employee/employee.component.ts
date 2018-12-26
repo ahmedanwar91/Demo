@@ -17,7 +17,7 @@ export class EmployeeComponent implements OnInit {
 
   getEmployee()
   {
-    this.http.get('http://localhost:5000/api/values').subscribe(
+    this.http.get('http://localhost:5000/api/Values').subscribe(
       response=>this.employees=response,error=>console.log(error))
   }
 
