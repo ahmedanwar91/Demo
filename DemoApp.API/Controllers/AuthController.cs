@@ -27,18 +27,18 @@ namespace DemoApp.API.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody]userforregisterdto userdto)
         {
-            userdto.Username=userdto.Username.ToLower();
-            if(await _repo.UserExists(userdto.Username))
+            userdto.username=userdto.username.ToLower();
+            if(await _repo.UserExists(userdto.username))
             return BadRequest("user exist befor");
             var usertocreate=new User {
-                Username=userdto.Username,
+                Username=userdto.username,
                 fullname=userdto.fullname,
-                Email=userdto.Email,
-                Enable=userdto.Enable
+                Email=userdto.email,
+                Enable=true
                 
 
             };
-          var createduser=await  _repo.Register(usertocreate,userdto.Password);
+          var createduser=await  _repo.Register(usertocreate,userdto.password);
           return StatusCode(201);
 
 
