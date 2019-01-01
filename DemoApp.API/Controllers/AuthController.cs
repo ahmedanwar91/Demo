@@ -53,7 +53,7 @@ namespace DemoApp.API.Controllers
           if(UserResponse==null) return Unauthorized();
           var calims=new []{
               new Claim(ClaimTypes.NameIdentifier,UserResponse.Id.ToString()),
-              new Claim(ClaimTypes.NameIdentifier,UserResponse.Username)
+              new Claim(ClaimTypes.Name,UserResponse.Username)
           }; 
           var key=new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value)); 
           var cred=new SigningCredentials(key,SecurityAlgorithms.HmacSha512);
