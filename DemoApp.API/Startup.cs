@@ -20,6 +20,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
+using AutoMapper;
 
 namespace DemoApp.API
 {
@@ -38,9 +39,16 @@ namespace DemoApp.API
              
     services.AddDbContext<DataContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DemoConnection")));
               IdentityModelEventSource.ShowPII = true;
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2).
+            AddJsonOptions(option=>{
+                option.SerializerSettings.ReferenceLoopHandling=Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            });
+
             services.AddCors();
+            services.AddAutoMapper();
+            services.AddTransient<TrialData>();
             services.AddScoped<IAuthRepository,AuthRepository>();
+            services.AddScoped<IZawajRepository,ZawajRepository>();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).
             AddJwtBearer(Options=>{
                 Options.TokenValidationParameters=new TokenValidationParameters{
@@ -56,7 +64,7 @@ namespace DemoApp.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env,TrialData trialData)
         {
             if (env.IsDevelopment())
             {
@@ -81,7 +89,8 @@ namespace DemoApp.API
                 // app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+           // app.UseHttpsRedirection();
+         //  trialData.TrialUser();
             app.UseCors(x=>x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             app.UseAuthentication();
             app.UseMvc();
