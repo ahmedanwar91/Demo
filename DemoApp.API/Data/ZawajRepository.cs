@@ -28,7 +28,7 @@ namespace DemoApp.API.Data
           //  var users=await _Context.Users.FirstOrDefaultAsync(u=>u.Id==id);
            // return users;
             var user=await  _Context.Users.Include(u=>u.Photos).FirstOrDefaultAsync(u=>u.Id==id);
-            var x="";
+            
             return user;
         }
 
