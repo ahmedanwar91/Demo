@@ -3,6 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using DemoApp.API.Data;
 using DemoApp.API.Dtos;
 using DemoApp.API.Models;
@@ -18,10 +19,12 @@ namespace DemoApp.API.Controllers
     {
         private readonly IAuthRepository _repo;
         private readonly IConfiguration _config;
-        public AuthController(IAuthRepository repo,IConfiguration  config)
+           private readonly IMapper _mapper;
+        public AuthController(IAuthRepository repo,IConfiguration  config, IMapper mapper)
         {
             this._repo = repo;
             this._config=config;
+              this._mapper = mapper;
 
         }
         [HttpPost("register")]
@@ -30,16 +33,11 @@ namespace DemoApp.API.Controllers
             userdto.username=userdto.username.ToLower();
             if(await _repo.UserExists(userdto.username))
             return BadRequest("user exist befor");
-            var usertocreate=new User {
-                Username=userdto.username,
-                fullname=userdto.fullname,
-                Email=userdto.email,
-                Enable=true
-                
-
-            };
+            var usertocreate= _mapper.Map<User>(userdto);
           var createduser=await  _repo.Register(usertocreate,userdto.password);
-          return StatusCode(201);
+          var userToreturn=_mapper.Map<userfordetailsdto>(createduser);
+          return CreatedAtRoute("GetUser",new {controller="Users",id=createduser.Id},userToreturn);
+           
 
 
         }
@@ -64,10 +62,14 @@ namespace DemoApp.API.Controllers
           };
           var tokenHandler=new  JwtSecurityTokenHandler();
           var token=tokenHandler.CreateToken(tokenDescriptor);
-
-          return Ok(new {
-              token=tokenHandler.WriteToken(token)
-          });
+          var user = _mapper.Map<userforlistdto>(UserResponse);
+            
+            return Ok(new
+            {
+                token = tokenHandler.WriteToken(token),
+                user
+            });
+           
 
 
 

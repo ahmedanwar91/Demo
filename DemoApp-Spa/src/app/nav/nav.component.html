@@ -33,6 +33,10 @@
             خروج</a>
         </div>
       </div>
+      <span  *ngIf="loggedIn()" >
+        
+        <img src="{{photoUrl || 'assets/userlogo.png'}}" alt="">
+      </span>
     <form *ngIf="!loggedIn()" (ngSubmit)="login()" #loginForm="ngForm" class="ml-5 form-inline my-2 my-lg-0">
       <input required name="username" class="form-control mr-sm-2" type="text" [(ngModel)]="model.username" placeholder="إسم المشترك">
       <input required name="password" class="form-control mr-sm-2" type="password" [(ngModel)]="model.password" placeholder="كلمة السر">

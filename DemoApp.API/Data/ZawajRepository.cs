@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using DemoApp.API.Models;
 using Microsoft.EntityFrameworkCore;
@@ -23,6 +24,13 @@ namespace DemoApp.API.Data
             _Context.Remove(entity);
         }
 
+        public async Task<Photo> GetPhoto(int id)
+        {
+            var photo=await  _Context.Photos.FirstOrDefaultAsync(u=>u.Id==id);
+            
+            return photo;
+        }
+
         public async Task<User> GetUser(int id)
         {
           //  var users=await _Context.Users.FirstOrDefaultAsync(u=>u.Id==id);
@@ -37,7 +45,12 @@ namespace DemoApp.API.Data
             var users=await _Context.Users.Include(u=>u.Photos).ToListAsync();
             return users;
         }
-
+         
+ public async Task<Photo> GetMainPhotoForUser(int userId)
+        {
+           return await _Context.Photos.Where(u=>u.UserId==userId).FirstOrDefaultAsync(p=>p.IsMain);
+           
+        }
         public async Task<bool> SaveAll()
         {
              return await _Context.SaveChangesAsync()>0;

@@ -13,6 +13,9 @@ namespace DemoApp.API.Data
 
           Task<IEnumerable<User>> GetUsers();
           Task<User> GetUser(int id);
+           Task<Photo> GetMainPhotoForUser(int userId);
+
+           Task<Photo> GetPhoto(int id);
          
     }
 }

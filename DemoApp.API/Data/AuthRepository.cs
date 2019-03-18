@@ -17,7 +17,8 @@ namespace DemoApp.API.Data
         {
             try
             {
-               var user=await _Context.Users.FirstOrDefaultAsync(x=>x.Username==username);
+                  var user = await _Context.Users.Include(p=>p.Photos).FirstOrDefaultAsync(x=>x.Username==username);
+              // var user=await _Context.Users.FirstOrDefaultAsync(x=>x.Username==username);
                if(user==null) return null;
                if(!VerifyPasswordHash(password,user.PasswordSalt,user.PasswordHash))
                return null;

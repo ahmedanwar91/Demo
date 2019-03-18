@@ -17,6 +17,10 @@ namespace DemoApp.API.Helper
             .ForMember(dest =>dest.Age,opt =>{opt.ResolveUsing(src =>src.DateOfBirth.CalculateAge());});
             CreateMap<Photo,photofordetailsdto>();
             CreateMap<UserForUpdateDto,User>();
+            
+            CreateMap<Photo,photoForReturnDto>();
+            CreateMap<photoForCreateDto,Photo>();
+            CreateMap<userforregisterdto,User>();
         }
     }
 }
